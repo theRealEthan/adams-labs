@@ -1,420 +1,522 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Adams Labs - Built, not marketed.</title>
+@extends('layouts.app')
 
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+@section('title', 'Adams Labs - Built, not marketed.')
 
-    <!-- Inter Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-    <!-- SweetAlert2 -->
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-
+@push('styles')
     <style>
-        :root {
-            --color-black: #000000;
-            --color-white: #FFFFFF;
-            --color-gray-light: #F5F5F5;
-            --color-gray-medium: #E0E0E0;
-            --color-gray-dark: #666666;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: var(--color-white);
-            color: var(--color-black);
-            line-height: 1.8;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .container-custom {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        /* Header */
-        .header {
-            padding: 2rem 0;
-            border-bottom: 1px solid var(--color-gray-medium);
-        }
-
-        .logo-container {
-            max-width: 200px;
-        }
-
-        .logo-container img {
-            width: 100%;
-            height: auto;
-        }
-
-        /* Hero Section */
+        /* ============================================
+           Hero Section
+           ============================================ */
         .hero {
-            padding: 4rem 0;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            padding: calc(var(--space-4xl) + 80px) 0 var(--space-4xl);
+            background: var(--white);
+            position: relative;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
         }
 
         .tagline {
-            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-family: var(--font-body);
+            font-size: 0.6875rem;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--color-gray-dark);
-            margin-bottom: 1rem;
+            letter-spacing: 0.15em;
+            color: var(--gray-500);
+            margin-bottom: var(--space-xl);
+            padding: 0.5rem 1rem;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-100);
+        }
+
+        .tagline::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--black);
+            border-radius: 50%;
         }
 
         .hero-title {
-            font-size: 2rem;
-            font-weight: 600;
-            line-height: 1.3;
-            margin-bottom: 1.5rem;
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: var(--space-xl);
+            color: var(--black);
+            letter-spacing: -0.03em;
         }
 
         .hero-description {
-            font-size: 1.125rem;
-            color: var(--color-gray-dark);
-            margin-bottom: 2rem;
+            font-size: 1.1875rem;
+            color: var(--gray-500);
+            margin-bottom: var(--space-2xl);
+            line-height: 1.7;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        /* Content Sections */
-        .content-section {
-            padding: 3rem 0;
-            border-top: 1px solid var(--color-gray-medium);
+        .hero-actions {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
-        .content-section:first-of-type {
-            border-top: none;
+        .hero-stats {
+            display: flex;
+            gap: var(--space-3xl);
+            margin-top: var(--space-3xl);
+            padding-top: var(--space-2xl);
+            border-top: 1px solid var(--gray-100);
+            justify-content: center;
         }
 
-        .section-title {
-            font-size: 0.875rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 1rem;
+        .stat {
+            text-align: center;
         }
 
-        .section-content {
-            font-size: 1rem;
-            color: var(--color-gray-dark);
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--black);
+            line-height: 1;
+            display: block;
         }
 
-        .section-content p {
-            margin-bottom: 1rem;
-        }
-
-        .section-content p:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Principles List */
-        .principles-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .principles-list li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--color-gray-light);
-            font-size: 1rem;
-        }
-
-        .principles-list li:last-child {
-            border-bottom: none;
-        }
-
-        /* Buttons */
-        .btn-custom {
-            display: inline-block;
-            padding: 0.75rem 2rem;
-            background-color: var(--color-black);
-            color: var(--color-white);
-            text-decoration: none;
-            border: 2px solid var(--color-black);
+        .stat-label {
+            font-size: 0.8125rem;
+            color: var(--gray-400);
+            margin-top: var(--space-sm);
+            display: block;
             font-weight: 500;
+        }
+
+        /* ============================================
+           Features Section
+           ============================================ */
+        .features {
+            padding: var(--space-4xl) 0;
+            background: var(--white);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-lg);
+            margin-top: var(--space-2xl);
+        }
+
+        .feature-card {
+            padding: var(--space-xl);
+            background: var(--white);
+            border: 1px solid var(--gray-100);
+            transition: all 0.4s var(--ease-smooth);
+            position: relative;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--black);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s var(--ease-smooth);
+        }
+
+        .feature-card:hover {
+            background: var(--gray-50);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-number {
+            font-family: var(--font-body);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: var(--gray-300);
+            margin-bottom: var(--space-lg);
+            display: block;
+            letter-spacing: 0.05em;
+        }
+
+        .feature-title {
+            font-family: var(--font-display);
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            color: var(--black);
+        }
+
+        .feature-description {
+            font-size: 0.9375rem;
+            color: var(--gray-500);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           Principles Section
+           ============================================ */
+        .principles {
+            padding: var(--space-4xl) 0;
+            background: var(--gray-50);
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-md);
+            margin-top: var(--space-2xl);
+        }
+
+        .principle-item {
+            padding: var(--space-xl);
+            background: var(--white);
+            border: 1px solid var(--gray-100);
+            transition: all 0.3s var(--ease-smooth);
+            position: relative;
+        }
+
+        .principle-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--black);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.3s var(--ease-smooth);
+        }
+
+        .principle-item:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .principle-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .principle-item h3 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            color: var(--black);
+        }
+
+        .principle-item p {
             font-size: 0.875rem;
-            transition: all 0.2s ease;
-            cursor: pointer;
+            color: var(--gray-500);
+            margin: 0;
+            line-height: 1.6;
         }
 
-        .btn-custom:hover {
-            background-color: var(--color-white);
-            color: var(--color-black);
+        /* ============================================
+           CTA Section
+           ============================================ */
+        .cta-section {
+            padding: var(--space-4xl) 0;
+            background: var(--black);
+            color: var(--white);
+            position: relative;
         }
 
-        .btn-outline {
-            background-color: var(--color-white);
-            color: var(--color-black);
-            border: 2px solid var(--color-black);
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .btn-outline:hover {
-            background-color: var(--color-black);
-            color: var(--color-white);
+        .cta-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 700;
+            margin-bottom: var(--space-lg);
+            letter-spacing: -0.02em;
         }
 
-        /* Footer */
-        .footer {
-            padding: 3rem 0 2rem;
-            border-top: 1px solid var(--color-gray-medium);
-            margin-top: 4rem;
+        .cta-description {
+            font-size: 1.0625rem;
+            margin-bottom: var(--space-2xl);
+            opacity: 0.8;
+            line-height: 1.7;
         }
 
-        .footer-content {
-            font-size: 0.875rem;
-            color: var(--color-gray-dark);
+        /* ============================================
+           Responsive
+           ============================================ */
+        @media (max-width: 991px) {
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .principles-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
-        /* Auth Links */
-        .auth-links {
-            text-align: right;
-        }
-
-        .auth-links a {
-            color: var(--color-black);
-            text-decoration: none;
-            margin-left: 1.5rem;
-            font-size: 0.875rem;
-            border-bottom: 1px solid transparent;
-            transition: border-color 0.2s ease;
-        }
-
-        .auth-links a:hover {
-            border-bottom-color: var(--color-black);
-        }
-
-        /* SweetAlert2 Custom Styling */
-        .swal2-popup {
-            font-family: 'Inter', sans-serif !important;
-        }
-
-        .swal2-styled.swal2-confirm {
-            background-color: var(--color-black) !important;
-            border: 2px solid var(--color-black) !important;
-        }
-
-        .swal2-styled.swal2-confirm:hover {
-            background-color: var(--color-white) !important;
-            color: var(--color-black) !important;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
+            .hero {
+                min-height: auto;
+                padding: calc(var(--space-3xl) + 80px) 0 var(--space-3xl);
+            }
+
+            .tagline {
+                font-size: 0.625rem;
+                padding: 0.375rem 0.75rem;
+            }
+
             .hero-title {
-                font-size: 1.5rem;
+                font-size: 2rem;
             }
 
             .hero-description {
                 font-size: 1rem;
             }
 
-            .auth-links {
-                text-align: left;
-                margin-top: 1rem;
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
             }
 
-            .auth-links a {
-                margin-left: 0;
-                margin-right: 1.5rem;
+            .hero-actions .btn-custom,
+            .hero-actions .btn-ghost {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: var(--space-lg);
+                margin-top: var(--space-xl);
+                padding-top: var(--space-xl);
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card {
+                padding: var(--space-lg);
+            }
+
+            .principles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .principle-item {
+                padding: var(--space-lg);
+            }
+
+            .cta-section {
+                padding: var(--space-3xl) 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.75rem;
+            }
+
+            .stat-number {
+                font-size: 1.75rem;
+            }
+
+            .cta-title {
+                font-size: 1.75rem;
             }
         }
     </style>
-</head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container-custom">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="logo-container">
-                        <img src="{{ asset('images/logo-full.png') }}" alt="Adams Labs">
-                    </div>
-                </div>
-                @if (Route::has('login'))
-                    <div class="col-md-6">
-                        <nav class="auth-links">
-                            @auth
-                                <a href="{{ url('/dashboard') }}">Dashboard</a>
-                            @else
-                                <a href="{{ route('login') }}">Log in</a>
-                                @if (Route::has('register'))
-                                    <a href="{{ route('register') }}">Register</a>
-                                @endif
-                            @endauth
-                        </nav>
-                    </div>
-                @endif
-            </div>
-        </div>
-    </header>
+@endpush
 
+@section('content')
     <!-- Hero Section -->
     <section class="hero">
-        <div class="container-custom">
-            <div class="tagline">Built, not marketed.</div>
-            <h1 class="hero-title">Simple, reliable software for everyday people.</h1>
-            <p class="hero-description">
-                Making the digital part of your day less irritating. Good software should be like good plumbing:
-                reliable, robust, and invisible until you need it.
-            </p>
-            <div>
-                <button class="btn-custom" onclick="showContactAlert()">Get Started</button>
+        <div class="container">
+            <div class="hero-content">
+                <div class="tagline">Built, not marketed</div>
+                <h1 class="hero-title">Simple, reliable software for everyday people.</h1>
+                <p class="hero-description">
+                    Making the digital part of your day less irritating. Good software should be like good plumbing — reliable, robust, and invisible until you need it.
+                </p>
+                <div class="hero-actions">
+                    <button class="btn-custom" onclick="showContactAlert()">Get Started</button>
+                    <a href="/projects" class="btn-ghost">View Projects</a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Independent</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">Unnecessary Features</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">∞</span>
+                        <span class="stat-label">Reliability</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Philosophy Section -->
-    <section class="content-section">
-        <div class="container-custom">
-            <h2 class="section-title">Philosophy</h2>
-            <div class="section-content">
-                <p>
-                    Adams Labs isn't trying to change the world. We're making the digital part of your day less irritating.
-                </p>
-                <p>
-                    Our identity is defined by subtraction. If it needs explaining, it needs simplifying.
-                </p>
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Our Approach</div>
+                <h2 class="section-title">Built for real people, real problems</h2>
+                <p class="section-description">We design for clarity first. No dashboards, no jargon, no learning curve.</p>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <span class="feature-number">01</span>
+                    <h3 class="feature-title">Easy to Start</h3>
+                    <p class="feature-description">No onboarding, no tutorials. If you need training, we've already failed. Our tools work immediately.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-number">02</span>
+                    <h3 class="feature-title">Simple to Use</h3>
+                    <p class="feature-description">One clear path to get things done. No hidden features, no complexity. Just the essentials.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-number">03</span>
+                    <h3 class="feature-title">Forgiving of Mistakes</h3>
+                    <p class="feature-description">People make errors. Our systems handle bad input gracefully and recover without drama.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-number">04</span>
+                    <h3 class="feature-title">Reliable Over Time</h3>
+                    <p class="feature-description">Systems that don't lose data, don't break, and keep working quietly in the background.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-number">05</span>
+                    <h3 class="feature-title">Respectful of Attention</h3>
+                    <p class="feature-description">No notifications, no unnecessary updates. Your time matters. We stay out of the way.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-number">06</span>
+                    <h3 class="feature-title">No Fluff</h3>
+                    <p class="feature-description">If it adds stress, it doesn't ship. Every feature earns its place through necessity.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Who We Build For -->
-    <section class="content-section">
-        <div class="container-custom">
-            <h2 class="section-title">Who We Build For</h2>
-            <div class="section-content">
-                <p>
-                    People, not companies. Users, not power-users. Real life, not edge cases.
-                </p>
-                <p>
-                    Parents, freelancers, shop owners, small teams, and anyone who just wants things to work.
-                    If you need training, we've already failed.
-                </p>
+    <!-- Principles Section -->
+    <section class="principles">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Philosophy</div>
+                <h2 class="section-title">Identity defined by subtraction</h2>
+                <p class="section-description">If it needs explaining, it needs simplifying.</p>
+            </div>
+
+            <div class="principles-grid">
+                <div class="principle-item">
+                    <h3>For People</h3>
+                    <p>Not companies. Not power-users. Real people with real problems.</p>
+                </div>
+                <div class="principle-item">
+                    <h3>Design Clarity</h3>
+                    <p>Good design should feel obvious. Calm, readable, predictable.</p>
+                </div>
+                <div class="principle-item">
+                    <h3>Invisible Tech</h3>
+                    <p>Strong engineering is invisible. Users never think about the technology.</p>
+                </div>
+                <div class="principle-item">
+                    <h3>No Jargon</h3>
+                    <p>Plain language. Clear communication. Human tone.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- What We Build -->
-    <section class="content-section">
-        <div class="container-custom">
-            <h2 class="section-title">What We Build</h2>
-            <div class="section-content">
-                <p>
-                    Simple productivity tools, everyday utilities, and small apps that solve one problem well.
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to build better software?</h2>
+                <p class="cta-description">
+                    Join us in creating tools that people actually want to use. Simple, reliable, and built for real life.
                 </p>
-                <p>
-                    We avoid dashboards, over-customisation, technical language, and complexity for its own sake.
-                </p>
+                <button class="btn-outline" onclick="showContactAlert()">Get in Touch</button>
             </div>
         </div>
     </section>
+@endsection
 
-    <!-- Product Principles -->
-    <section class="content-section">
-        <div class="container-custom">
-            <h2 class="section-title">Product Principles</h2>
-            <ul class="principles-list">
-                <li>Easy to start</li>
-                <li>Simple to use</li>
-                <li>Forgiving of mistakes</li>
-                <li>Reliable over time</li>
-                <li>Respectful of attention</li>
-            </ul>
-            <div class="section-content mt-3">
-                <p>If it adds stress, it doesn't ship.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Design Philosophy -->
-    <section class="content-section">
-        <div class="container-custom">
-            <h2 class="section-title">Design Philosophy</h2>
-            <div class="section-content">
-                <p>
-                    Good design should feel obvious. Calm, readable, predictable.
-                </p>
-                <p>
-                    If someone needs instructions, the design needs work.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Engineering Philosophy -->
-    <section class="content-section">
-        <div class="container-custom">
-            <h2 class="section-title">Engineering Philosophy</h2>
-            <div class="section-content">
-                <p>
-                    Strong engineering is invisible. Our systems don't lose data, recover from errors,
-                    handle bad input gracefully, and keep working quietly.
-                </p>
-                <p>
-                    Users never need to think about the technology underneath.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container-custom">
-            <div class="footer-content">
-                <p>Adams Labs. Independent software studio.</p>
-                <p class="mt-2">A trusted name for simple tools. Known for restraint. Quietly recommended.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+@push('scripts')
     <script>
         function showContactAlert() {
             Swal.fire({
                 title: 'Get Started',
-                html: '<p style="text-align: left; color: #666;">Ready to start? Sign up to access our tools and services.</p>',
+                html: '<p style="text-align: left; color: #71717A; line-height: 1.6; font-size: 0.9375rem;">Ready to start? Sign up to access our tools and services. No commitment, no complexity.</p>',
                 showCancelButton: true,
                 confirmButtonText: 'Sign Up',
                 cancelButtonText: 'Not Now',
                 customClass: {
+                    popup: 'swal-minimal',
                     confirmButton: 'btn-custom',
-                    cancelButton: 'btn-outline'
+                    cancelButton: 'btn-ghost'
                 },
-                buttonsStyling: false
+                buttonsStyling: false,
+                width: '420px',
+                padding: '2rem'
             }).then((result) => {
                 if (result.isConfirmed) {
                     @if (Route::has('register'))
                         window.location.href = '{{ route("register") }}';
                     @else
-                        Swal.fire({
-                            title: 'Coming Soon',
-                            text: 'Registration will be available soon.',
-                            icon: 'info',
-                            confirmButtonText: 'OK',
-                            customClass: {
-                                confirmButton: 'btn-custom'
-                            },
-                            buttonsStyling: false
-                        });
+                    Swal.fire({
+                        title: 'Coming Soon',
+                        text: 'Registration will be available soon.',
+                        icon: 'info',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            popup: 'swal-minimal',
+                            confirmButton: 'btn-custom'
+                        },
+                        buttonsStyling: false,
+                        width: '360px'
+                    });
                     @endif
                 }
             });
         }
     </script>
-</body>
-</html>
+@endpush
