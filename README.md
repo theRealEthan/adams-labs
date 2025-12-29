@@ -111,7 +111,3 @@ scripts/
   bootstrap.sh
 src/              # Laravel app lives here (created by composer)
 ```
-
-
-
-git token: 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
