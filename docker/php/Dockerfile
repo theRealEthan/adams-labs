@@ -1,4 +1,4 @@
-FROM php:8.3-fpm
+FROM php:8.4-fpm
 
 # Install system dependencies and PHP extensions required by Laravel
 RUN apt-get update \
@@ -19,8 +19,16 @@ RUN apt-get update \
         opcache \
     && rm -rf /var/lib/apt/lists/*
 
+# Include Composer in the app image so it can install deps when needed.
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
 # Copy in local PHP config
 COPY local.ini /usr/local/etc/php/conf.d/local.ini
 
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 WORKDIR /var/www/html
 
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["php-fpm"]
